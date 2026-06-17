@@ -1,0 +1,1 @@
+"use strict";exports.PLAYER_COUNT=6,exports.isSetOver=function(t,e,n,r=5){const s=function(t,e=5){return t===e?15:25}(n,r);return t>=s&&t-e>=2||e>=s&&e-t>=2},exports.needsDecidingSetSwap=function(t,e,n,r=5){return t===r&&8===e&&!n};

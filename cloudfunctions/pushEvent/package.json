@@ -1,0 +1,9 @@
+{
+  "name": "pushEvent",
+  "version": "1.0.0",
+  "description": "推送同步事件",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

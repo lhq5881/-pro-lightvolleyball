@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "轮转站位",
+  "usingComponents": {
+    "court-diagram": "../../components/CourtDiagram"
+  }
+}

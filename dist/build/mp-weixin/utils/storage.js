@@ -1,0 +1,1 @@
+"use strict";const t=require("../common/vendor.js");exports.getStorage=function(e){try{const r=t.index.getStorageSync(e);return r||null}catch{return null}},exports.setStorage=function(e,r){try{t.index.setStorageSync(e,r)}catch(n){console.error("Storage set failed:",n)}};

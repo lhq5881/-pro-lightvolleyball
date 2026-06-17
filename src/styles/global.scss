@@ -1,0 +1,79 @@
+@import './variables.scss';
+
+page {
+  background-color: $bg-color;
+  color: $text-color;
+  font-size: $font-size-base;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  line-height: 1.6;
+}
+
+.container {
+  padding: $spacing-base;
+}
+
+.card {
+  background-color: $bg-white;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  padding: $spacing-base;
+  margin-bottom: $spacing-base;
+}
+
+.btn-primary {
+  background-color: $primary-color;
+  color: $text-white;
+  border-radius: $border-radius;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-base;
+  text-align: center;
+  border: none;
+
+  &::after {
+    border: none;
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-color;
+  color: $text-white;
+  border-radius: $border-radius;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-base;
+  text-align: center;
+  border: none;
+
+  &::after {
+    border: none;
+  }
+}
+
+.text-center { text-align: center; }
+.text-primary { color: $primary-color; }
+.text-secondary { color: $text-secondary; }
+.text-light { color: $text-light; }
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-1 { flex: 1; }

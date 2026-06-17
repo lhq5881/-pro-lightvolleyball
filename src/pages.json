@@ -1,0 +1,41 @@
+{
+  "pages": [
+    { "path": "pages/index/index", "style": { "navigationBarTitleText": "排球裁判助手" } },
+    { "path": "pages/match-setup/index", "style": { "navigationBarTitleText": "比赛设置" } },
+    { "path": "pages/room/index", "style": { "navigationBarTitleText": "同步房间" } },
+    { "path": "pages/scoring/index", "style": { "navigationBarTitleText": "比赛计分", "pageOrientation": "landscape" } },
+    { "path": "pages/rotation/index", "style": { "navigationBarTitleText": "轮转站位" } },
+    { "path": "pages/substitution/index", "style": { "navigationBarTitleText": "换人" } },
+    { "path": "pages/set-break/index", "style": { "navigationBarTitleText": "局间休息" } },
+    { "path": "pages/match-result/index", "style": { "navigationBarTitleText": "比赛结果" } },
+    { "path": "pages/history/index", "style": { "navigationBarTitleText": "历史记录" } },
+    { "path": "pages/history-detail/index", "style": { "navigationBarTitleText": "比赛详情" } },
+    { "path": "pages/settings/index", "style": { "navigationBarTitleText": "设置" } },
+    { "path": "pages-indoor/match-setup/index", "style": { "navigationBarTitleText": "室内排球设置" } },
+    { "path": "pages-indoor/scoring/index", "style": { "navigationBarTitleText": "室内排球计分", "pageOrientation": "landscape" } },
+    { "path": "pages-indoor/rotation/index", "style": { "navigationBarTitleText": "轮转站位" } },
+    { "path": "pages-indoor/substitution/index", "style": { "navigationBarTitleText": "换人" } },
+    { "path": "pages-indoor/set-break/index", "style": { "navigationBarTitleText": "局间休息" } },
+    { "path": "pages-indoor/match-result/index", "style": { "navigationBarTitleText": "比赛结果" } },
+    { "path": "pages-beach/match-setup/index", "style": { "navigationBarTitleText": "沙滩排球设置" } },
+    { "path": "pages-beach/scoring/index", "style": { "navigationBarTitleText": "沙滩排球计分", "pageOrientation": "landscape" } },
+    { "path": "pages-beach/match-result/index", "style": { "navigationBarTitleText": "比赛结果" } }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "排球裁判助手",
+    "navigationBarBackgroundColor": "#1a6b3c",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a6b3c",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "static/tab-home.png", "selectedIconPath": "static/tab-home-active.png" },
+      { "pagePath": "pages/history/index", "text": "记录", "iconPath": "static/tab-history.png", "selectedIconPath": "static/tab-history-active.png" },
+      { "pagePath": "pages/settings/index", "text": "设置", "iconPath": "static/tab-settings.png", "selectedIconPath": "static/tab-settings-active.png" }
+    ]
+  }
+}

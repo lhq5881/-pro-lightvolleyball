@@ -1,0 +1,9 @@
+﻿node_modules/
+miniprogram_npm/
+*.log
+.project
+.settings/
+.vscode/
+.DS_Store
+dist/
+build/

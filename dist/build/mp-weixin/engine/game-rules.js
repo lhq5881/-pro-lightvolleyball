@@ -1,0 +1,1 @@
+"use strict";exports.DEFAULT_CAP_DECIDING=17,exports.DEFAULT_CAP_REGULAR=25,exports.PLAYER_COUNT=5,exports.isMatchOver=function(t,r){return t>=2||r>=2},exports.isSetOver=function(t,r,e,n){const s=function(t){return 3===t?15:21}(e),o=n??(3===e?17:25);return t>=o||r>=o||(t>=s&&t-r>=2||r>=s&&r-t>=2)};

@@ -1,0 +1,20 @@
+{
+  "name": "排球裁判助手",
+  "appid": "wx432a0188ccb1755e",
+  "description": "排球轮转站位及计分微信小程序",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "wx432a0188ccb1755e",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true,
+      "cloud": true
+    },
+    "usingComponents": true,
+    "lazyCodeLoading": "requiredComponents",
+    "cloudfunctionRoot": "cloudfunctions/"
+  }
+}

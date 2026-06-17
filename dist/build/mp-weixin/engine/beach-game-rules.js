@@ -1,0 +1,1 @@
+"use strict";exports.TIMEOUTS_PER_SET=1,exports.getSwapInterval=function(t){return 3===t?5:7},exports.isMatchOver=function(t,r){return t>=2||r>=2},exports.isSetOver=function(t,r,e){const n=function(t){return 3===t?15:21}(e);return t>=n&&t-r>=2||r>=n&&r-t>=2};

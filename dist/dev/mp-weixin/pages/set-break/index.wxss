@@ -1,0 +1,130 @@
+
+.set-break-page.data-v-e73dafdb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+.overlay.data-v-e73dafdb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+.dialog.data-v-e73dafdb {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  width: 90%;
+  max-width: 600rpx;
+}
+.title.data-v-e73dafdb {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+.score-summary.data-v-e73dafdb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  gap: 20rpx;
+}
+.team-name.data-v-e73dafdb {
+  font-size: 28rpx;
+  color: #333;
+}
+.score.data-v-e73dafdb {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #e74c3c;
+}
+.total-score.data-v-e73dafdb {
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+.positions-section.data-v-e73dafdb {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+.pos-team.data-v-e73dafdb {
+  flex: 1;
+}
+.pos-label.data-v-e73dafdb {
+  font-size: 26rpx;
+  color: #666;
+  text-align: center;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.pos-grid.data-v-e73dafdb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+.pos-slot.data-v-e73dafdb {
+  width: 48%;
+  padding: 8rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  text-align: center;
+}
+.pos-num.data-v-e73dafdb {
+  font-size: 22rpx;
+  color: #999;
+  display: block;
+}
+.pos-name.data-v-e73dafdb {
+  font-size: 22rpx;
+  color: #333;
+  display: block;
+}
+.serving-section.data-v-e73dafdb {
+  margin-bottom: 30rpx;
+}
+.serving-label.data-v-e73dafdb {
+  font-size: 26rpx;
+  color: #666;
+  text-align: center;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.serving-options.data-v-e73dafdb {
+  display: flex;
+  gap: 20rpx;
+  justify-content: center;
+}
+.serving-btn.data-v-e73dafdb {
+  padding: 16rpx 40rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+.serving-btn.active.data-v-e73dafdb {
+  border-color: #07c160;
+  color: #07c160;
+  background: #f0fff0;
+}
+.action-btn.data-v-e73dafdb {
+  background: #07c160;
+  color: #fff;
+  text-align: center;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
