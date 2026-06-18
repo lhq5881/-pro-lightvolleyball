@@ -19,6 +19,12 @@ onLoad((options) => {
 const teamAName = computed(() => match.value?.teamA.name ?? '队A')
 const teamBName = computed(() => match.value?.teamB.name ?? '队B')
 
+function goScoresheet() {
+  if (matchId.value) {
+    uni.navigateTo({ url: `/pages-indoor/scoresheet/index?id=${matchId.value}` })
+  }
+}
+
 function formatDate(timestamp: number): string {
   const d = new Date(timestamp)
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`
@@ -157,6 +163,10 @@ function getPointProgress(set: SetScore): string[] {
         </view>
       </view>
     </view>
+
+    <view class="scoresheet-btn" @tap="goScoresheet" v-if="match">
+      <text class="scoresheet-btn-text">查看 FIVB 记分表</text>
+    </view>
   </view>
 
   <view v-else class="page empty-page">
@@ -166,6 +176,21 @@ function getPointProgress(set: SetScore): string[] {
 
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
+
+.scoresheet-btn {
+  margin: $spacing-base $spacing-lg;
+  padding: $spacing-base $spacing-md;
+  background-color: #fff;
+  border: 2rpx solid #1565c0;
+  border-radius: $border-radius;
+  text-align: center;
+}
+
+.scoresheet-btn-text {
+  font-size: $font-size-md;
+  color: #1565c0;
+  font-weight: bold;
+}
 
 .page {
   min-height: 100vh;

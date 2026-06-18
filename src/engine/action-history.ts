@@ -17,6 +17,12 @@ export interface TimeoutAction {
   team: TeamSide
   setIndex: number
   previousLastTimeout: { team: TeamSide; timestamp: number } | null
+  /** 暂停时A队比分 */
+  scoreA?: number
+  /** 暂停时B队比分 */
+  scoreB?: number
+  /** 暂停时间戳 */
+  timestamp?: number
 }
 
 export interface SubstitutionAction {
@@ -29,6 +35,12 @@ export interface SubstitutionAction {
   captainStateBefore: string[]
   wasPlayerInOnBench: boolean
   wasPlayerInOnTeam: boolean
+  /** 换人时A队比分 */
+  scoreA?: number
+  /** 换人时B队比分 */
+  scoreB?: number
+  /** 换人时间戳 */
+  timestamp?: number
 }
 
 export interface LiberoSwapAction {
@@ -38,6 +50,12 @@ export interface LiberoSwapAction {
   previousPositions: string[]
   previousLiberoReplacements: Record<string, string>
   captainStateBefore: string[]
+  /** 自由人替换时A队比分 */
+  scoreA?: number
+  /** 自由人替换时B队比分 */
+  scoreB?: number
+  /** 替换时间戳 */
+  timestamp?: number
 }
 
 export type MatchAction = ScoreAction | TimeoutAction | SubstitutionAction | LiberoSwapAction

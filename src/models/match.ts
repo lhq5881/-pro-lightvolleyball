@@ -7,11 +7,52 @@ export interface Player {
   isCaptain?: boolean
 }
 
+/** 队伍官员 */
+export interface TeamOfficial {
+  role: 'coach' | 'assistant' | 'trainer'
+  name: string
+}
+
+/** 换人明细（含换人时比分，用于 FIVB 记分表） */
+export interface SubstitutionRecord {
+  team: TeamSide
+  playerOutId: string
+  playerInId: string
+  playerInNumber: string
+  playerOutNumber: string
+  positionIndex: number
+  scoreA: number
+  scoreB: number
+  timestamp: number
+}
+
+/** 暂停明细（含暂停时比分） */
+export interface TimeoutRecord {
+  team: TeamSide
+  scoreA: number
+  scoreB: number
+  timestamp: number
+}
+
+/** 自由人替换明细 */
+export interface LiberoSwapRecord {
+  team: TeamSide
+  liberoNumber: string
+  replacedPlayerId: string
+  scoreA: number
+  scoreB: number
+  timestamp: number
+}
+
 export interface TeamConfig {
   name: string
   players: Player[]
   /** 初始站位顺序，对应1-5号位，存储playerId */
   startingPositions: string[]
+  /** 官员（教练等） */
+  officials?: TeamOfficial[]
+  /** 自由人号码列表 */
+  liberos?: string[]
 }
 
 export interface SetPlayerInfo {
@@ -31,6 +72,18 @@ export interface SetScore {
   teamAPlayers: SetPlayerInfo
   /** B队本局人员信息 */
   teamBPlayers: SetPlayerInfo
+  /** 本局开始时间戳 */
+  setStartTime?: number
+  /** 本局结束时间戳 */
+  setEndTime?: number
+  /** 本局初始发球方 */
+  initialServingTeam?: TeamSide
+  /** 本局换人明细 */
+  substitutions?: SubstitutionRecord[]
+  /** 本局暂停明细 */
+  timeouts?: TimeoutRecord[]
+  /** 本局自由人替换明细 */
+  liberoSwaps?: LiberoSwapRecord[]
 }
 
 export interface Match {
@@ -49,6 +102,12 @@ export interface Match {
   teamASubPlayers: Player[]
   /** B队替补上场的队员 */
   teamBSubPlayers: Player[]
+  /** 赛制（3局2胜或5局3胜） */
+  totalSets?: 3 | 5
+  /** A队自由人号码 */
+  teamALiberos?: string[]
+  /** B队自由人号码 */
+  teamBLiberos?: string[]
 }
 
 export function createPlayer(name: string, number: string, isCaptain: boolean = false): Player {

@@ -95,7 +95,10 @@ export const useBeachMatchStore = defineStore('beachMatch', () => {
     currentSetStartingA.value = [...teamAConfig.startingPositions]
     currentSetStartingB.value = [...teamBConfig.startingPositions]
     actionHistory.value = []
-  } */
+
+    pushSyncSnapshot()
+  }
+
   function scorePoint(team: TeamSide) {
     if (!scoringEngine.value) return
 

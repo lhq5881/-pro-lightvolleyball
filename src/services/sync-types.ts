@@ -92,6 +92,8 @@ export interface MatchStateSnapshot {
   lastTimeout: TimeoutEvent | null
   pendingSet3Swap: Set3SwapEvent | null
   actionHistory?: MatchAction[]
+  teamAOriginalCaptainId?: string
+  teamBOriginalCaptainId?: string
 }
 
 /** 房间状态 */

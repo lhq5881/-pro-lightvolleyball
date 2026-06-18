@@ -16,6 +16,13 @@ function handleBack() {
   indoorMatchStore.resetMatch()
   uni.reLaunch({ url: '/pages/index/index' })
 }
+
+function goScoresheet() {
+  const id = indoorMatchStore.match?.id
+  if (id) {
+    uni.navigateTo({ url: `/pages-indoor/scoresheet/index?id=${id}` })
+  }
+}
 </script>
 
 <template>
@@ -49,6 +56,10 @@ function handleBack() {
           <text class="set-winner">{{ s.winner === 'A' ? teamAName : teamBName }}胜</text>
         </view>
       </view>
+    </view>
+
+    <view class="scoresheet-btn" @tap="goScoresheet">
+      <text class="scoresheet-btn-text">查看 FIVB 记分表</text>
     </view>
 
     <view class="back-btn" @tap="handleBack">
@@ -176,6 +187,22 @@ $indoor-team-b: #f44336;
 
   .a-win & { color: $indoor-team-a; font-weight: bold; }
   .b-win & { color: $indoor-team-b; font-weight: bold; }
+}
+
+.scoresheet-btn {
+  width: 100%;
+  margin-top: $spacing-base;
+  padding: $spacing-base $spacing-md;
+  background-color: #fff;
+  border: 2rpx solid $indoor-color;
+  border-radius: $border-radius;
+  text-align: center;
+}
+
+.scoresheet-btn-text {
+  font-size: $font-size-md;
+  color: $indoor-color;
+  font-weight: bold;
 }
 
 .back-btn {

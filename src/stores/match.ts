@@ -504,7 +504,9 @@ export const useMatchStore = defineStore('match', () => {
     teamBSubIn.value = []
     setBreakEndTime.value = null
     actionHistory.value = []
-  } - 现在只处理 STATE_UPDATE（状态快照同步） */
+  }
+
+  /** 应用远程事件 - 现在只处理 STATE_UPDATE（状态快照同步） */
   function applyRemoteEvent(event: SyncEvent) {
     const { type, payload } = event
 
@@ -557,7 +559,9 @@ export const useMatchStore = defineStore('match', () => {
       lastTimeout: lastTimeout.value ? { ...lastTimeout.value } : null,
       pendingSet3Swap: pendingSet3Swap.value ? { ...pendingSet3Swap.value } : null,
       setBreakEndTime: setBreakEndTime.value,
-      actionHistory: [...actionHistory.value]
+      actionHistory: [...actionHistory.value],
+      teamAOriginalCaptainId: teamAOriginalCaptainId.value,
+      teamBOriginalCaptainId: teamBOriginalCaptainId.value
     }
   }
 
@@ -595,6 +599,9 @@ export const useMatchStore = defineStore('match', () => {
     pendingSet3Swap.value = snapshot.pendingSet3Swap ? { ...snapshot.pendingSet3Swap } : null
     setBreakEndTime.value = (snapshot as any).setBreakEndTime ?? null
     actionHistory.value = [...(snapshot.actionHistory ?? [])]
+    // 恢复原始队长ID（用于换人后自动恢复队长标记）
+    teamAOriginalCaptainId.value = (snapshot as any).teamAOriginalCaptainId ?? ''
+    teamBOriginalCaptainId.value = (snapshot as any).teamBOriginalCaptainId ?? ''
   }
 
   return {

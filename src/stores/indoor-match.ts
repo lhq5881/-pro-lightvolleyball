@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { IndoorScoringEngine, type TeamSide } from '@/engine/indoor-scoring-engine'
 import { IndoorRotationEngine } from '@/engine/indoor-rotation-engine'
-import type { Player, TeamConfig, Match, SetPlayerInfo } from '@/models/match'
+import type { Player, TeamConfig, Match, SetPlayerInfo, SubstitutionRecord, TimeoutRecord, LiberoSwapRecord } from '@/models/match'
 import { createMatch } from '@/models/match'
 import type { SyncEvent, MatchStateSnapshot, MatchConfig, TimeoutEvent, Set3SwapEvent } from '@/services/sync-types'
 import { syncService } from '@/services/sync-service'
 import { useSyncStore } from '@/stores/sync'
-import type { MatchAction } from '@/engine/action-history'
+import type { MatchAction, TimeoutAction, SubstitutionAction, LiberoSwapAction } from '@/engine/action-history'
 import { getUndoDescription } from '@/engine/action-history'
 
 export const useIndoorMatchStore = defineStore('indoorMatch', () => {
@@ -57,6 +57,11 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
   // 原始队长ID（比赛开始时设置的队长，用于换人后恢复队长标记）
   const teamAOriginalCaptainId = ref('')
   const teamBOriginalCaptainId = ref('')
+
+  // 当前局开始时间戳（用于记分表记录每局时长）
+  const currentSetStartTime = ref<number>(0)
+  // 当前局初始发球方（用于记分表推导发球轮次）
+  const currentSetInitialServer = ref<TeamSide>('A')
 
   // 每局开始时的首发站位ID（1-6号位顺序），用于记录本局首发队员
   const currentSetStartingA = ref<string[]>([])
@@ -116,6 +121,10 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
     teamAOriginalCaptainId.value = captainA?.id ?? ''
     const captainB = teamBConfig.players.find(p => p.isCaptain)
     teamBOriginalCaptainId.value = captainB?.id ?? ''
+
+    // 记录首局开始时间和初始发球方
+    currentSetStartTime.value = Date.now()
+    currentSetInitialServer.value = initialServingTeam
   }
 
   /** 得分 */
@@ -166,6 +175,14 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       if (lastResult && match.value) {
         lastResult.teamAPlayers = captureSetPlayers('A')
         lastResult.teamBPlayers = captureSetPlayers('B')
+        // 持久化本局明细数据（用于 FIVB 记分表）
+        const setIndex = scoringEngine.value.currentSet - 1
+        lastResult.setEndTime = Date.now()
+        lastResult.setStartTime = currentSetStartTime.value
+        lastResult.initialServingTeam = currentSetInitialServer.value
+        lastResult.substitutions = extractSubstitutions(setIndex)
+        lastResult.timeouts = extractTimeouts(setIndex)
+        lastResult.liberoSwaps = extractLiberoSwaps(setIndex)
       }
       actionHistory.value.push(action)
       return
@@ -191,6 +208,59 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       startingPlayers,
       subPlayers: [...subInList]
     }
+  }
+
+  /** 从当前局 actionHistory 提取换人明细（用于 FIVB 记分表） */
+  function extractSubstitutions(setIndex: number): SubstitutionRecord[] {
+    return actionHistory.value
+      .filter(a => a.type === 'substitution' && (a as SubstitutionAction).setIndex === setIndex)
+      .map(a => {
+        const sa = a as SubstitutionAction
+        const playerOut = getPlayer(sa.playerOutId)
+        return {
+          team: sa.team,
+          playerOutId: sa.playerOutId,
+          playerInId: sa.playerInId,
+          playerInNumber: sa.playerIn?.number ?? '',
+          playerOutNumber: playerOut?.number ?? '',
+          positionIndex: 0,
+          scoreA: sa.scoreA ?? 0,
+          scoreB: sa.scoreB ?? 0,
+          timestamp: sa.timestamp ?? 0
+        }
+      })
+  }
+
+  /** 从当前局 actionHistory 提取暂停明细 */
+  function extractTimeouts(setIndex: number): TimeoutRecord[] {
+    return actionHistory.value
+      .filter(a => a.type === 'timeout' && (a as TimeoutAction).setIndex === setIndex)
+      .map(a => {
+        const ta = a as TimeoutAction
+        return {
+          team: ta.team,
+          scoreA: ta.scoreA ?? 0,
+          scoreB: ta.scoreB ?? 0,
+          timestamp: ta.timestamp ?? 0
+        }
+      })
+  }
+
+  /** 从当前局 actionHistory 提取自由人替换明细 */
+  function extractLiberoSwaps(setIndex: number): LiberoSwapRecord[] {
+    return actionHistory.value
+      .filter(a => a.type === 'libero_swap')
+      .map(a => {
+        const la = a as LiberoSwapAction
+        return {
+          team: la.team,
+          liberoNumber: la.liberoNumber,
+          replacedPlayerId: '',
+          scoreA: la.scoreA ?? 0,
+          scoreB: la.scoreB ?? 0,
+          timestamp: la.timestamp ?? 0
+        }
+      })
   }
 
   /** 撤销上一次操作 */
@@ -325,6 +395,9 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
     setBreakEndTime.value = null
     // 新一局清空操作历史
     actionHistory.value = []
+    // 记录新一局开始时间和初始发球方
+    currentSetStartTime.value = Date.now()
+    currentSetInitialServer.value = scoringEngine.value.servingTeam
     pushSyncSnapshot()
   }
 
@@ -480,7 +553,10 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       setIndex,
       captainStateBefore,
       wasPlayerInOnBench,
-      wasPlayerInOnTeam
+      wasPlayerInOnTeam,
+      scoreA: scoringEngine.value.scoreA,
+      scoreB: scoringEngine.value.scoreB,
+      timestamp: Date.now()
     })
 
     pushSyncSnapshot()
@@ -497,7 +573,13 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       winner: r.winner,
       pointLog: [...r.pointLog],
       teamAPlayers: r.teamAPlayers ?? { startingPlayers: [], subPlayers: [] },
-      teamBPlayers: r.teamBPlayers ?? { startingPlayers: [], subPlayers: [] }
+      teamBPlayers: r.teamBPlayers ?? { startingPlayers: [], subPlayers: [] },
+      setStartTime: r.setStartTime,
+      setEndTime: r.setEndTime,
+      initialServingTeam: r.initialServingTeam,
+      substitutions: r.substitutions ?? [],
+      timeouts: r.timeouts ?? [],
+      liberoSwaps: r.liberoSwaps ?? []
     }))
     match.value.setsWonA = scoringEngine.value.setsWonA
     match.value.setsWonB = scoringEngine.value.setsWonB
@@ -506,6 +588,9 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
     match.value.endTime = Date.now()
     match.value.teamASubPlayers = [...teamASubIn.value]
     match.value.teamBSubPlayers = [...teamBSubIn.value]
+    match.value.totalSets = totalSets.value as 3 | 5
+    match.value.teamALiberos = [teamALibero1.value, teamALibero2.value].filter(Boolean) as string[]
+    match.value.teamBLiberos = [teamBLibero1.value, teamBLibero2.value].filter(Boolean) as string[]
   }
 
   /** 获取轮转站位 */
@@ -558,7 +643,12 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
     timeouts[setIndex]++
     lastTimeout.value = { team, timestamp: Date.now() }
 
-    actionHistory.value.push({ type: 'timeout', team, setIndex, previousLastTimeout })
+    actionHistory.value.push({
+      type: 'timeout', team, setIndex, previousLastTimeout,
+      scoreA: scoringEngine.value.scoreA,
+      scoreB: scoringEngine.value.scoreB,
+      timestamp: Date.now()
+    })
     pushSyncSnapshot()
     return true
   }
@@ -693,7 +783,11 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       lastTimeout: lastTimeout.value ? { ...lastTimeout.value } : null,
       pendingSet3Swap: pendingSet5Swap.value ? { ...pendingSet5Swap.value } : null,
       setBreakEndTime: setBreakEndTime.value,
-      actionHistory: [...actionHistory.value]
+      actionHistory: [...actionHistory.value],
+      teamAOriginalCaptainId: teamAOriginalCaptainId.value,
+      teamBOriginalCaptainId: teamBOriginalCaptainId.value,
+      currentSetStartTime: currentSetStartTime.value,
+      currentSetInitialServer: currentSetInitialServer.value
     }
   }
 
@@ -733,6 +827,11 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
     pendingSet5Swap.value = snapshot.pendingSet3Swap ? { ...snapshot.pendingSet3Swap } : null
     setBreakEndTime.value = (snapshot as any).setBreakEndTime ?? null
     actionHistory.value = [...(snapshot.actionHistory ?? [])]
+    // 恢复原始队长ID（用于换人后自动恢复队长标记）
+    teamAOriginalCaptainId.value = (snapshot as any).teamAOriginalCaptainId ?? ''
+    teamBOriginalCaptainId.value = (snapshot as any).teamBOriginalCaptainId ?? ''
+    currentSetStartTime.value = (snapshot as any).currentSetStartTime ?? 0
+    currentSetInitialServer.value = (snapshot as any).currentSetInitialServer ?? 'A'
     console.log('[IndoorMatch] loadSnapshot done, lastTimeout:', lastTimeout.value, 'pendingSet5Swap:', pendingSet5Swap.value)
   }
 
@@ -809,7 +908,10 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
         liberoNumber,
         previousPositions,
         previousLiberoReplacements,
-        captainStateBefore
+        captainStateBefore,
+        scoreA: scoringEngine.value.scoreA,
+        scoreB: scoringEngine.value.scoreB,
+        timestamp: Date.now()
       })
 
       pushSyncSnapshot()
@@ -892,7 +994,10 @@ export const useIndoorMatchStore = defineStore('indoorMatch', () => {
       liberoNumber,
       previousPositions,
       previousLiberoReplacements,
-      captainStateBefore
+      captainStateBefore,
+      scoreA: scoringEngine.value.scoreA,
+      scoreB: scoringEngine.value.scoreB,
+      timestamp: Date.now()
     })
 
     pushSyncSnapshot()

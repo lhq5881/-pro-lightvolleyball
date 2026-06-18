@@ -61,6 +61,14 @@ const teamALibero2 = ref('')
 const teamBLibero1 = ref('')
 const teamBLibero2 = ref('')
 
+// 官员信息（教练等，用于 FIVB 记分表）
+const teamACoach = ref('')
+const teamAAssistant = ref('')
+const teamATrainer = ref('')
+const teamBCoach = ref('')
+const teamBAssistant = ref('')
+const teamBTrainer = ref('')
+
 // 赛制选择：3局2胜或5局3胜
 const totalSets = ref<3 | 5>(3)
 
@@ -127,13 +135,25 @@ function startMatch() {
   const teamAConfig: TeamConfig = {
     name: teamAName.value.trim(),
     players: [...teamAPlayers.value],
-    startingPositions: teamAPlayers.value.map(p => p.id)
+    startingPositions: teamAPlayers.value.map(p => p.id),
+    officials: [
+      { role: 'coach', name: teamACoach.value.trim() },
+      { role: 'assistant', name: teamAAssistant.value.trim() },
+      { role: 'trainer', name: teamATrainer.value.trim() }
+    ].filter(o => o.name),
+    liberos: [teamALibero1.value.trim(), teamALibero2.value.trim()].filter(Boolean)
   }
 
   const teamBConfig: TeamConfig = {
     name: teamBName.value.trim(),
     players: [...teamBPlayers.value],
-    startingPositions: teamBPlayers.value.map(p => p.id)
+    startingPositions: teamBPlayers.value.map(p => p.id),
+    officials: [
+      { role: 'coach', name: teamBCoach.value.trim() },
+      { role: 'assistant', name: teamBAssistant.value.trim() },
+      { role: 'trainer', name: teamBTrainer.value.trim() }
+    ].filter(o => o.name),
+    liberos: [teamBLibero1.value.trim(), teamBLibero2.value.trim()].filter(Boolean)
   }
 
   indoorMatchStore.startMatch(teamAConfig, teamBConfig, initialServingTeam.value, totalSets.value)
@@ -235,6 +255,23 @@ function startMatch() {
           <input class="libero-input" v-model="teamALibero2" placeholder="输入号码（可选）" />
         </view>
       </view>
+
+      <!-- 队伍A官员信息（用于记分表） -->
+      <view class="libero-section">
+        <text class="libero-title">官员（选填）</text>
+        <view class="libero-row">
+          <text class="libero-label">教练</text>
+          <input class="libero-input" v-model="teamACoach" placeholder="输入姓名" />
+        </view>
+        <view class="libero-row">
+          <text class="libero-label">助理教练</text>
+          <input class="libero-input" v-model="teamAAssistant" placeholder="输入姓名" />
+        </view>
+        <view class="libero-row">
+          <text class="libero-label">队医</text>
+          <input class="libero-input" v-model="teamATrainer" placeholder="输入姓名" />
+        </view>
+      </view>
     </view>
 
     <!-- 队伍B -->
@@ -264,6 +301,23 @@ function startMatch() {
         <view class="libero-row">
           <text class="libero-label">自由人2</text>
           <input class="libero-input" v-model="teamBLibero2" placeholder="输入号码（可选）" />
+        </view>
+      </view>
+
+      <!-- 队伍B官员信息（用于记分表） -->
+      <view class="libero-section">
+        <text class="libero-title">官员（选填）</text>
+        <view class="libero-row">
+          <text class="libero-label">教练</text>
+          <input class="libero-input" v-model="teamBCoach" placeholder="输入姓名" />
+        </view>
+        <view class="libero-row">
+          <text class="libero-label">助理教练</text>
+          <input class="libero-input" v-model="teamBAssistant" placeholder="输入姓名" />
+        </view>
+        <view class="libero-row">
+          <text class="libero-label">队医</text>
+          <input class="libero-input" v-model="teamBTrainer" placeholder="输入姓名" />
         </view>
       </view>
     </view>

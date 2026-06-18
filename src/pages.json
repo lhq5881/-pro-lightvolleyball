@@ -17,6 +17,7 @@
     { "path": "pages-indoor/substitution/index", "style": { "navigationBarTitleText": "换人" } },
     { "path": "pages-indoor/set-break/index", "style": { "navigationBarTitleText": "局间休息" } },
     { "path": "pages-indoor/match-result/index", "style": { "navigationBarTitleText": "比赛结果" } },
+    { "path": "pages-indoor/scoresheet/index", "style": { "navigationBarTitleText": "FIVB记分表" } },
     { "path": "pages-beach/match-setup/index", "style": { "navigationBarTitleText": "沙滩排球设置" } },
     { "path": "pages-beach/scoring/index", "style": { "navigationBarTitleText": "沙滩排球计分", "pageOrientation": "landscape" } },
     { "path": "pages-beach/match-result/index", "style": { "navigationBarTitleText": "比赛结果" } }
