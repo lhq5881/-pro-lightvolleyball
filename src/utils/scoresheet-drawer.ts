@@ -626,7 +626,7 @@ function drawSummary(ctx: Ctx, data: ScoresheetData, startY: number): number {
   }
 
   // 合计行
-  let cx = x
+  cx = x
   drawBox(ctx, cx, y, cols[0].w * scaleX, rowH)
   ctx.font = `bold ${SHEET.fontSize.mini}px sans-serif`
   ctx.fillStyle = SHEET.color.text
